@@ -7,10 +7,11 @@ class DatabaseHandler {
   DatabaseHandler._();
 
   static DatabaseHandler _dbHandler = DatabaseHandler._();
-  static Database _db;
+  static late Database _db;
 
   String _noteTable = 'NOTES';
   String _noteId = 'id';
+  String _noteTitle = 'title';
   String _noteDescription = 'description';
 
   Future<Database> get db async {
@@ -77,9 +78,9 @@ class DatabaseHandler {
 
     List<Map<String, dynamic>> x =
         await db.rawQuery('SELECT COUNT (*) from $_noteTable');
-    int result = Sqflite.firstIntValue(x);
+    int? result = Sqflite.firstIntValue(x);
 
-    return result;
+    return result!;
   }
 
   // Get the 'Map List' [ List<Map> ] and convert it to 'Note List' [ List<Note> ]
@@ -93,8 +94,8 @@ class DatabaseHandler {
 
     // For loop to create a 'Note List' from a 'Map List'
     for (int i = 0; i < count; i++) {
-      noteList
-          .add(Note(noteMapList[i][_noteId], noteMapList[i][_noteDescription]));
+      noteList.add(Note(noteMapList[i][_noteId], noteMapList[i][_noteTitle],
+          noteMapList[i][_noteDescription]));
     }
 
     return noteList;
